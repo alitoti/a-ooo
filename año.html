@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Carta Mágica</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- FUENTE -->
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+body{
+  margin:0;
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:linear-gradient(135deg,#667eea,#764ba2);
+  font-family:'Quicksand', sans-serif;
+  overflow:hidden;
+}
+
+/* ESTRELLAS */
+.estrella{
+  position:absolute;
+  width:2px;
+  height:2px;
+  background:white;
+  border-radius:50%;
+  opacity:7;
+  animation:flotar linear infinite;
+}
+@keyframes flotar{
+  from{transform:translateY(100vh)}
+  to{transform:translateY(-10vh)}
+}
+
+/* LOGIN */
+.login{
+  background:rgba(0,0,0,.45);
+  padding:26px;
+  border-radius:18px;
+  text-align:center;
+  color:white;
+  width:240px;
+}
+.login h2{
+  margin-bottom:10px;
+  font-weight:600;
+}
+input,button{
+  width:100%;
+  padding:10px;
+  margin-top:10px;
+  border:none;
+  border-radius:12px;
+  font-family:'Quicksand', sans-serif;
+}
+button{
+  background:#5a67d8;
+  color:white;
+  cursor:pointer;
+}
+
+/* SOBRE */
+.sobre{
+  display:none;
+  width:260px;
+  height:180px;
+  background:#5a67d8;
+  position:relative;
+  cursor:pointer;
+  border-radius:14px;
+  box-shadow:0 15px 30px rgba(0,0,0,.3);
+  transition:.2s;
+}
+.sobre::before{
+  content:"";
+  position:absolute;
+  top:0;
+  left:0;
+  border-left:130px solid transparent;
+  border-right:130px solid transparent;
+  border-top:90px solid #7f9cf5;
+}
+
+/* CARTA */
+.carta{
+  position:absolute;
+  top:15px;
+  left:10px;
+  width:240px;
+  height:450px;
+ background:white;
+  padding:15px;
+  transform:translateY(220px);
+  opacity:0;
+  transition:.8s;
+  border-radius:18px;
+  text-align:center;
+  color:white;
+  overflow-y:auto;
+}
+
+.carta{
+  overflow-y:auto;
+}
+
+/* IMAGEN */
+.imagen-carta{
+  width:100%;
+  max-height:160px;
+  object-fit:contain;
+  background:white;
+  border-radius:14px;
+  padding:6px;
+}
+
+/* TEXTO ESFERA */
+.texto-esfera{
+  font-size:13px;
+  color:#5a67d8;
+  margin:8px 0 10px;
+}
+
+/* ESFERA */
+.esfera{
+  margin:0 auto;
+  width:150px;
+  height:150px;
+  background:radial-gradient(circle at top,#4c51bf,#1a202c);
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:white;
+  opacity:3;
+  font-size:13px;
+  padding:15px;
+  box-shadow:0 0 25px rgba(90,103,216,.8);
+}
+.agitar{animation:shake .6s}
+@keyframes shake{
+  0%{transform:rotate(0)}
+  25%{transform:rotate(5deg)}
+  50%{transform:rotate(-5deg)}
+  75%{transform:rotate(5deg)}
+  100%{transform:rotate(0)}
+}
+.texto-gracias{
+  margin-top:20px;
+  font-size:14px;
+  color:#2d3748;
+  line-height:1.6;
+  font-style:italic;
+}
+.abierto .carta{transform:translateY(-210px);opacity:1}
+.abierto{transform:translateY(120px)}
+</style>
+</head>
+
+<body>
+
+<!-- AUDIO -->
+<audio id="musica" loop>
+  <source src="musica.mp3" type="audio/mpeg">
+</audio>
+
+<div class="login" id="login">
+  <h2>PARA KIKI</h2>
+  <input id="clave" type="password" placeholder="Contraseña">
+  <button onclick="entrar()">Entrar</button>
+</div>
+
+<div class="sobre" id="sobre" onclick="abrirCarta()">
+  <div class="carta">
+     <p class="texto-esfera">
+    FELIZ AÑO NUEVO PARA LA NOVIA MAS BONITA DEL MUNDO, O SEA, TÚ 🫵🏼
+    </p>
+
+    <img src="osos.png" class="imagen-carta">
+
+    <p class="texto-esfera">
+    Para ti
+    </p>
+
+    <div class="esfera" id="esfera">
+      Tócame o agita tu telefono
+    </div>
+
+<p class="texto-gracias">
+  Gracias por estar en mi vida y por quedarte incluso en los momentos difíciles.<br><br>
+  Gracias por toda la paciencia, tu cariño y por cada pequeño detalle que tienes conmigo, en especial la paciencia, tú dices que no soy insoportable, pero creo tdo lo contrario<br><br>
+     Gracias por hacer mis días más bonitos y por ser una parte tan importante de mi historia, siendo mi persona favorita.
+  De verdad, gracias por todo lo que eres, nunca cambies.
+    <p id="final" style="font-size:12px;margin-top:8px;"></p>
+  </div>
+</div>
+
+<script>
+// ESTRELLAS
+for(let i=0;i<60;i++){
+  const e=document.createElement("div");
+  e.className="estrella";
+  e.style.left=Math.random()*100+"vw";
+  e.style.animationDuration=(6+Math.random()*10)+"s";
+  document.body.appendChild(e);
+}
+
+// LOGIN + MÚSICA
+function entrar(){
+  if(document.getElementById("clave").value==="2025"){
+    document.getElementById("login").style.display="none";
+    document.getElementById("sobre").style.display="block";
+
+    const audio=document.getElementById("musica");
+    audio.volume=0.4;
+    audio.play();
+  }else{
+    alert("Contraseña incorrecta");
+  }
+}
+
+// FRASES
+const frases=[
+"Este año te va a sorprender",
+"Algo bonito viene en camino para ti, no te desesperes",
+"Confía en lo que sientes",
+"Gracias por estar para mi",
+"Todo se acomoda a su debido tiempo",
+"No estás sola",
+"Te amo",
+"Las cosas buenas llegan al ultimo",
+"Confía más en ti",
+"Este año será diferente",
+"Tú puedes, sueña en grande",
+"Vienen momentos lindos",
+"Todo mejora poco a poco",
+"Hay muchas razones para sonreír",
+"Mientras Ali exista tendrás a alguien que te quiera y amé",
+"Eres lo que mas quiero en este mundo, eso eres",
+"La distancia no cambia lo que siento, solo demuestra lo fuerte que es",
+"Aunque no pueda abrazarte, siempre estoy y estaré contigo",
+"Cada mensaje tuyo me recuerda que vale la pena esperar",
+"No estás sola, incluso a kilómetros de distancia",
+"Si hoy el día pesa, recuerda que alguien piensa en ti, o sea yo",
+"A la distancia también se puede cuidar un corazón",
+"Tu esfuerzo no pasa desapercibido, yo lo veo todo y estoy orgullosa de eso",
+"Te pienso en cada momento importante.",
+"Aunque no te vea, te siento cerca.",
+"Siempre contigo, aunque lejos.",
+"La distancia no apaga lo nuestro.",
+"Te elijo todos los días.",
+"Un día menos para estar más cerca.",
+"Eres más fuerte de lo que crees, y yo siempre voy a creer en ti.",
+"Cada paso que das te acerca a todo lo que mereces.",
+"No importa cuántas veces dudes, yo estoy aquí para ti.",
+"Tus sueños importan",
+"Respira, lo estás haciendo mejor de lo que piensas.",
+"Todo lo bonito que das al mundo volverá a ti.",
+"Confía en ti, yo ya lo hago.",
+"Hoy puede ser difícil, pero tú puedes con esto.",
+"Te amo más de lo que imaginas.",
+"Eres mi persona favorita.",
+"Nunca dejes de ser tú.",
+"Siempre estás en mis pensamientos.",
+"Toma mi mano, toma mi vida entera, porque no puedo evitar enamorarme de ti"
+];
+
+let usadas=0;
+function nuevaFrase(){
+  const e=document.getElementById("esfera");
+  e.classList.add("agitar");
+  e.textContent=frases[Math.floor(Math.random()*frases.length)];
+  usadas++;
+  if(usadas>=7){
+    document.getElementById("final").textContent=
+    "Mensaje especial: Gracias por estar, este año también quiero compartirlo contigo";
+  }
+  setTimeout(()=>e.classList.remove("agitar"),600);
+}
+
+document.getElementById("esfera").onclick=e=>{
+  e.stopPropagation();
+  nuevaFrase();
+};
+
+window.addEventListener("devicemotion",e=>{
+  const a=e.accelerationIncludingGravity;
+  if(a && Math.abs(a.x)+Math.abs(a.y)+Math.abs(a.z)>30){
+    nuevaFrase();
+  }
+});
+
+function abrirCarta(){
+  document.getElementById("sobre").classList.toggle("abierto");
+}
+</script>
+
+</body>
+</html>
